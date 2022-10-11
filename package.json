@@ -1,0 +1,35 @@
+{
+  "name": "chiptracker",
+  "version": "1.0.0",
+  "description": "Web based music tracker",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "lint": "npx eslint ./src || exit 0",
+    "lint:fix": "npx eslint ./src --fix || exit 0",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adrsh/chiptracker.git"
+  },
+  "keywords": [
+    "chiptune"
+  ],
+  "author": "Adrian Shosholli <as227cw@student.lnu.se>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/adrsh/chiptracker/issues"
+  },
+  "homepage": "https://github.com/adrsh/chiptracker#readme",
+  "devDependencies": {
+    "@lnu/eslint-config": "^1.1.6",
+    "vite": "^3.1.7"
+  },
+  "eslintConfig": {
+    "extends": "@lnu"
+  }
+}
