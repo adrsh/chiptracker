@@ -27,7 +27,6 @@ customElements.define('ct-sequence-note',
       super()
       this.attachShadow({ mode: 'open' })
       this.shadowRoot.appendChild(template.content.cloneNode(true))
-      // this.setAttribute('contenteditable', 'true')
     }
 
     /**
@@ -64,8 +63,8 @@ customElements.define('ct-sequence-note',
      */
     attributeChangedCallback (name, oldValue, newValue) {
       if (name === 'note') {
-        this.note = newValue
-        this.shadowRoot.textContent = this.note
+        this.note = new Chiptune.Note(parseInt(newValue))
+        this.shadowRoot.textContent = this.note.getNotation()
       } else if (name === 'row') {
         this.row = newValue
       }
