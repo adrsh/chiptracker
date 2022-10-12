@@ -1,3 +1,5 @@
+import * as Chiptune from '../../webchiptune'
+
 /**
  * The ct-sequence-note web component.
  */
@@ -10,15 +12,12 @@ template.innerHTML = `
       font-family: monospace;
       height: 1rem;
     }
-    .selected {
-      background-color: #BBB;
-    }
   </style>
 `
 
 customElements.define('ct-sequence-note',
   /**
-   * Represents a music tracker.
+   * Represents a note in the pattern.
    */
   class extends HTMLElement {
     /**
@@ -37,7 +36,7 @@ customElements.define('ct-sequence-note',
     connectedCallback () {
       this.shadowRoot.textContent = '---'
       this.addEventListener('click', event => {
-        this.dispatchEvent(new CustomEvent('selected', { detail: { row: this.row } }))
+        this.dispatchEvent(new CustomEvent('selected', { detail: { row: this.row, note: this } }))
       })
     }
 
@@ -66,7 +65,7 @@ customElements.define('ct-sequence-note',
     attributeChangedCallback (name, oldValue, newValue) {
       if (name === 'note') {
         this.note = newValue
-        this.textContent = this.note
+        this.shadowRoot.textContent = this.note
       } else if (name === 'row') {
         this.row = newValue
       }

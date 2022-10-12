@@ -24,7 +24,10 @@ template.innerHTML = `
     }
   </style>
   <div id="rows"></div>
-  <ct-sequence></ct-sequence>
+  <ct-sequence column="0" instrument="square"></ct-sequence>
+  <ct-sequence column="1" instrument="triangle"></ct-sequence>
+  <ct-sequence column="2" instrument="sawtooth"></ct-sequence>
+  <ct-sequence column="3" instrument="sine"></ct-sequence>
 `
 
 customElements.define('ct-tracker',
@@ -39,6 +42,8 @@ customElements.define('ct-tracker',
       super()
       this.attachShadow({ mode: 'open' })
       this.shadowRoot.appendChild(template.content.cloneNode(true))
+
+      this.selectedNote = null
     }
 
     /**
@@ -54,9 +59,22 @@ customElements.define('ct-tracker',
 
       document.addEventListener('keydown', event => {
         if (!event.repeat) {
-          console.log(this.#getNoteFromKey(event.code))
+          const noteNumber = this.#getNoteFromKey(event.code)
+          if (noteNumber) {
+            this.selectedNote.setAttribute('note', this.#getNoteFromKey(event.code))
+          }
         }
       })
+
+      for (const seq of this.shadowRoot.querySelectorAll('ct-sequence')) {
+        seq.addEventListener('selected', event => {
+          if (this.selectedNote) {
+            this.selectedNote.removeAttribute('selected')
+          }
+          this.selectedNote = event.detail.note
+          this.selectedNote.setAttribute('selected', '')
+        })
+      }
     }
 
     /**
