@@ -1,5 +1,6 @@
 import '../ct-sequence'
 import '../ct-options'
+import '../ct-cursor'
 
 /**
  * The ct-tracker web component.
@@ -13,10 +14,9 @@ template.innerHTML = `
       outline: black solid 1px;
       font-family: monospace;
     }
-    #pattern {
+    #pattern, #sequences {
       display: flex;
       flex-direction: row;
-      outline: black solid 1px;
       font-family: monospace;
     }
     #rows {
@@ -32,17 +32,25 @@ template.innerHTML = `
       user-select: none;
     }
     ct-sequence {
-      border-right: gray solid 1px;
+      border-right: 1px solid #888;
+      box-sizing: border-box;
+      width: 2rem;
+    }
+    #sequences {
+      position: relative;
     }
   </style>
   <ct-options></ct-options>
   <button id="play-button">Play</button>
   <div id="pattern">
     <div id="rows"></div>
-    <ct-sequence column="0" instrument="square"></ct-sequence>
-    <ct-sequence column="1" instrument="triangle"></ct-sequence>
-    <ct-sequence column="2" instrument="sawtooth"></ct-sequence>
-    <ct-sequence column="3" instrument="sine"></ct-sequence>
+    <div id="sequences">
+      <ct-cursor column="0" row="0"></ct-cursor>
+      <ct-sequence column="0" instrument="square"></ct-sequence>
+      <ct-sequence column="1" instrument="triangle"></ct-sequence>
+      <ct-sequence column="2" instrument="sawtooth"></ct-sequence>
+      <ct-sequence column="3" instrument="sine"></ct-sequence>
+    </div>
   </div>
 `
 
@@ -76,14 +84,7 @@ customElements.define('ct-tracker',
       }
 
       document.addEventListener('keydown', event => {
-        if (!event.repeat) {
-          const noteNumber = this.#getNoteFromKey(event.code)
-          if (noteNumber) {
-            this.selectedNote.setAttribute('note', this.#getNoteFromKey(event.code))
-          } else {
-            this.selectedNote.removeAttribute('note')
-          }
-        }
+        this.#handleKeyPress(event)
       })
 
       for (const seq of this.shadowRoot.querySelectorAll('ct-sequence')) {
@@ -96,6 +97,24 @@ customElements.define('ct-tracker',
         })
       }
       this.playButton.addEventListener('click', () => this.#playPattern())
+    }
+
+    /**
+     * Handle key presses.
+     *
+     * @param {Event} event The event.
+     */
+    #handleKeyPress (event) {
+      if (!event.repeat) {
+        const noteNumber = this.#getNoteFromKey(event.code)
+        if (noteNumber && this.selectedNote) {
+          if (noteNumber <= 75 && noteNumber >= 48) {
+            this.selectedNote.setAttribute('note', noteNumber)
+          } else {
+            this.selectedNote.removeAttribute('note')
+          }
+        }
+      }
     }
 
     /**

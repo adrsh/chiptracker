@@ -12,6 +12,8 @@ template.innerHTML = `
       font-family: monospace;
       height: 1rem;
       user-select: none;
+      width: 2rem;
+      letter-spacing: 0.05rem;
     }
   </style>
   <div id="name"></div>

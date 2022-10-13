@@ -11,7 +11,6 @@ template.innerHTML = `
       display: flex;
       flex-direction: column;
       font-family: monospace;
-      letter-spacing: 0.05rem;
     }
     #rows {
       display: flex;
@@ -61,6 +60,7 @@ customElements.define('ct-sequence',
      */
     connectedCallback () {
       this.#generateNotes()
+
       const noteObserver = new MutationObserver((mutations, observer) => {
         for (const mutation of mutations) {
           const row = mutation.target.getAttribute('row')
@@ -72,6 +72,7 @@ customElements.define('ct-sequence',
           }
         }
       })
+
       noteObserver.observe(this.shadowRoot, {
         subtree: true,
         attributeFilter: ['note']
