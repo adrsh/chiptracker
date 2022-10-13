@@ -50,6 +50,24 @@ customElements.define('ct-sequence',
      * Called after the element is inserted to the DOM.
      */
     connectedCallback () {
+      this.#generateNotes()
+      const noteObserver = new MutationObserver((mutations, observer) => {
+        for (const mutation of mutations) {
+          const row = mutation.target.getAttribute('row')
+          const note = mutation.target.getAttribute('note')
+          this.sequence.add(row, parseInt(note))
+        }
+      })
+      noteObserver.observe(this.shadowRoot, {
+        subtree: true,
+        attributeFilter: ['note']
+      })
+    }
+
+    /**
+     * Generate notes with event listeners.
+     */
+    #generateNotes () {
       for (let i = 0; i < 64; i++) {
         const sequenceNote = document.createElement('ct-sequence-note')
         sequenceNote.setAttribute('row', i)

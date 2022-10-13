@@ -1,4 +1,6 @@
 import '../ct-sequence'
+import '../ct-options'
+import * as Chiptune from '../../webchiptune'
 
 /**
  * The ct-tracker web component.
@@ -23,6 +25,8 @@ template.innerHTML = `
       justify-content: center;
     }
   </style>
+  <ct-options></ct-options>
+  <button id="play-button">Play</button>
   <div id="rows"></div>
   <ct-sequence column="0" instrument="square"></ct-sequence>
   <ct-sequence column="1" instrument="triangle"></ct-sequence>
@@ -42,6 +46,8 @@ customElements.define('ct-tracker',
       super()
       this.attachShadow({ mode: 'open' })
       this.shadowRoot.appendChild(template.content.cloneNode(true))
+
+      this.playButton = this.shadowRoot.querySelector('#play-button')
 
       this.selectedNote = null
     }
@@ -75,6 +81,17 @@ customElements.define('ct-tracker',
           this.selectedNote.setAttribute('selected', '')
         })
       }
+      this.playButton.addEventListener('click', () => this.#playPattern())
+    }
+
+    /**
+     * Plays the pattern.
+     */
+    #playPattern () {
+      const sequenceElements = this.shadowRoot.querySelectorAll('ct-sequence')
+      for (const sequenceElement of sequenceElements) {
+        sequenceElement.sequence.play()
+      }
     }
 
     /**
@@ -91,80 +108,41 @@ customElements.define('ct-tracker',
      */
     #getNoteFromKey (key) {
       switch (key) {
-        case 'KeyZ':
-          return '48'
-        case 'KeyX':
-          return '50'
-        case 'KeyC':
-          return '52'
-        case 'KeyV':
-          return '53'
-        case 'KeyB':
-          return '55'
-        case 'KeyN':
-          return '57'
-        case 'KeyM':
-          return '59'
-        case 'Comma':
-          return '60'
-        case 'Period':
-          return '62'
-        case 'Slash':
-          return '64'
-        case 'KeyL':
-          return '61'
-        case 'Semicolon':
-          return '63'
-
-        case 'KeyS':
-          return '49'
-        case 'KeyD':
-          return '51'
-        case 'KeyG':
-          return '54'
-        case 'KeyH':
-          return '56'
-        case 'KeyJ':
-          return '58'
-
-        case 'KeyQ':
-          return '60'
-        case 'KeyW':
-          return '62'
-        case 'KeyE':
-          return '64'
-        case 'KeyR':
-          return '65'
-        case 'KeyT':
-          return '67'
-        case 'KeyY':
-          return '69'
-        case 'KeyU':
-          return '71'
-        case 'KeyI':
-          return '72'
-        case 'KeyO':
-          return '74'
-        case 'KeyP':
-          return '76'
-
-        case 'Digit2':
-          return '61'
-        case 'Digit3':
-          return '63'
-        case 'Digit5':
-          return '66'
-        case 'Digit6':
-          return '68'
-        case 'Digit7':
-          return '70'
-        case 'Digit9':
-          return '73'
-        case 'Digit0':
-          return '75'
-
-        default:
-          return ''
+        case 'KeyZ': return '48'
+        case 'KeyX': return '50'
+        case 'KeyC': return '52'
+        case 'KeyV': return '53'
+        case 'KeyB': return '55'
+        case 'KeyN': return '57'
+        case 'KeyM': return '59'
+        case 'Comma': return '60'
+        case 'Period': return '62'
+        case 'Slash': return '64'
+        case 'KeyL': return '61'
+        case 'Semicolon': return '63'
+        case 'KeyS': return '49'
+        case 'KeyD': return '51'
+        case 'KeyG': return '54'
+        case 'KeyH': return '56'
+        case 'KeyJ': return '58'
+        case 'KeyQ': return '60'
+        case 'KeyW': return '62'
+        case 'KeyE': return '64'
+        case 'KeyR': return '65'
+        case 'KeyT': return '67'
+        case 'KeyY': return '69'
+        case 'KeyU': return '71'
+        case 'KeyI': return '72'
+        case 'KeyO': return '74'
+        case 'KeyP': return '76'
+        case 'Digit2': return '61'
+        case 'Digit3': return '63'
+        case 'Digit5': return '66'
+        case 'Digit6': return '68'
+        case 'Digit7': return '70'
+        case 'Digit9': return '73'
+        case 'Digit0': return '75'
+        default: return ''
       }
     }
   }
