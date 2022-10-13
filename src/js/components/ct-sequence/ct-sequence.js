@@ -55,7 +55,11 @@ customElements.define('ct-sequence',
         for (const mutation of mutations) {
           const row = mutation.target.getAttribute('row')
           const note = mutation.target.getAttribute('note')
-          this.sequence.add(row, parseInt(note))
+          if (note) {
+            this.sequence.add(row, parseInt(note))
+          } else {
+            this.sequence.delete(row)
+          }
         }
       })
       noteObserver.observe(this.shadowRoot, {

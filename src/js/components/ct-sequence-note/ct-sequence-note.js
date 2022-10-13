@@ -11,8 +11,10 @@ template.innerHTML = `
       flex-direction: column;
       font-family: monospace;
       height: 1rem;
+      user-select: none;
     }
   </style>
+  <div id="name"></div>
 `
 
 customElements.define('ct-sequence-note',
@@ -27,13 +29,15 @@ customElements.define('ct-sequence-note',
       super()
       this.attachShadow({ mode: 'open' })
       this.shadowRoot.appendChild(template.content.cloneNode(true))
+
+      this.name = this.shadowRoot.querySelector('#name')
     }
 
     /**
      * Called after the element is inserted to the DOM.
      */
     connectedCallback () {
-      this.shadowRoot.textContent = '---'
+      this.name.textContent = '---'
       this.addEventListener('click', event => {
         this.dispatchEvent(new CustomEvent('selected', { detail: { row: this.row, note: this } }))
       })
@@ -63,8 +67,13 @@ customElements.define('ct-sequence-note',
      */
     attributeChangedCallback (name, oldValue, newValue) {
       if (name === 'note') {
-        this.note = new Chiptune.Note(parseInt(newValue))
-        this.shadowRoot.textContent = this.note.getNotation()
+        if (newValue) {
+          this.note = new Chiptune.Note(parseInt(newValue))
+          this.name.textContent = this.note.getNotation()
+        } else {
+          this.note = null
+          this.name.textContent = '---'
+        }
       } else if (name === 'row') {
         this.row = newValue
       }

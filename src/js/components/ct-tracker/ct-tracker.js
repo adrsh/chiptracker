@@ -1,6 +1,5 @@
 import '../ct-sequence'
 import '../ct-options'
-import * as Chiptune from '../../webchiptune'
 
 /**
  * The ct-tracker web component.
@@ -68,6 +67,8 @@ customElements.define('ct-tracker',
           const noteNumber = this.#getNoteFromKey(event.code)
           if (noteNumber) {
             this.selectedNote.setAttribute('note', this.#getNoteFromKey(event.code))
+          } else {
+            this.selectedNote.removeAttribute('note')
           }
         }
       })
