@@ -9,6 +9,12 @@ template.innerHTML = `
   <style>
     :host {
       display: flex;
+      flex-direction: column;
+      outline: black solid 1px;
+      font-family: monospace;
+    }
+    #pattern {
+      display: flex;
       flex-direction: row;
       outline: black solid 1px;
       font-family: monospace;
@@ -16,21 +22,28 @@ template.innerHTML = `
     #rows {
       display: flex;
       flex-direction: column;
+      border-right: gray solid 1px;
     }
     #rows > div {
       height: 1rem;
-      width: 1.5rem;
+      width: 1.75rem;
       display: flex;
       justify-content: center;
+      user-select: none;
+    }
+    ct-sequence {
+      border-right: gray solid 1px;
     }
   </style>
   <ct-options></ct-options>
   <button id="play-button">Play</button>
-  <div id="rows"></div>
-  <ct-sequence column="0" instrument="square"></ct-sequence>
-  <ct-sequence column="1" instrument="triangle"></ct-sequence>
-  <ct-sequence column="2" instrument="sawtooth"></ct-sequence>
-  <ct-sequence column="3" instrument="sine"></ct-sequence>
+  <div id="pattern">
+    <div id="rows"></div>
+    <ct-sequence column="0" instrument="square"></ct-sequence>
+    <ct-sequence column="1" instrument="triangle"></ct-sequence>
+    <ct-sequence column="2" instrument="sawtooth"></ct-sequence>
+    <ct-sequence column="3" instrument="sine"></ct-sequence>
+  </div>
 `
 
 customElements.define('ct-tracker',

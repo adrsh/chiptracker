@@ -10,8 +10,8 @@ template.innerHTML = `
     :host {
       display: flex;
       flex-direction: column;
-      outline: black solid 1px;
       font-family: monospace;
+      letter-spacing: 0.05rem;
     }
     #rows {
       display: flex;
@@ -23,10 +23,18 @@ template.innerHTML = `
       display: flex;
       justify-content: flex-end;
     }
+    #list > ct-sequence-note:nth-child(4n+1) {
+      background-color: #eee;
+    }
+    #list > ct-sequence-note:nth-child(16n+1) {
+      background-color: #ccc;
+    }
     ct-sequence-note[selected] {
-      background-color: #ddd;
+      background-color: #4488ff !important;
+      color: white;
     }
   </style>
+  <div id="list"></div>
 `
 
 customElements.define('ct-sequence',
@@ -41,6 +49,8 @@ customElements.define('ct-sequence',
       super()
       this.attachShadow({ mode: 'open' })
       this.shadowRoot.appendChild(template.content.cloneNode(true))
+
+      this.list = this.shadowRoot.querySelector('#list')
 
       this.instrument = new Chiptune.Instrument('square')
       this.sequence = new Chiptune.Sequence(this.instrument)
@@ -78,7 +88,7 @@ customElements.define('ct-sequence',
         sequenceNote.addEventListener('selected', event => {
           this.dispatchEvent(new CustomEvent('selected', { detail: { column: this.column, row: event.detail.row, note: event.detail.note } }))
         })
-        this.shadowRoot.append(sequenceNote)
+        this.list.append(sequenceNote)
       }
     }
 

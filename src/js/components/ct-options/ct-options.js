@@ -10,7 +10,6 @@ template.innerHTML = `
     :host {
       display: flex;
       flex-direction: row;
-      outline: black solid 1px;
       font-family: monospace;
     }
   </style>
