@@ -51,7 +51,7 @@ customElements.define('ct-sequence',
 
       this.list = this.shadowRoot.querySelector('#list')
 
-      this.instrument = new Chiptune.Instrument('square')
+      this.instrument = new Chiptune.Instrument(this.getAttribute('instrument'))
       this.sequence = new Chiptune.Sequence(this.instrument)
     }
 
