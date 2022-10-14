@@ -87,7 +87,7 @@ customElements.define('ct-sequence',
         const sequenceNote = document.createElement('ct-sequence-note')
         sequenceNote.setAttribute('row', i)
         sequenceNote.addEventListener('selected', event => {
-          this.dispatchEvent(new CustomEvent('selected', { detail: { column: this.column, row: event.detail.row, note: event.detail.note } }))
+          this.dispatchEvent(new CustomEvent('selected', { detail: { column: this.column, row: event.detail.row } }))
         })
         this.list.append(sequenceNote)
       }

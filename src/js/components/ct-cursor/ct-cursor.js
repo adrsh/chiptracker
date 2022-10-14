@@ -26,6 +26,9 @@ customElements.define('ct-cursor',
       super()
       this.attachShadow({ mode: 'open' })
       this.shadowRoot.appendChild(template.content.cloneNode(true))
+
+      this.column = 0
+      this.row = 0
     }
 
     /**

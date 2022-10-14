@@ -41,7 +41,7 @@ customElements.define('ct-sequence-note',
     connectedCallback () {
       this.name.textContent = '---'
       this.addEventListener('click', event => {
-        this.dispatchEvent(new CustomEvent('selected', { detail: { row: this.row, note: this } }))
+        this.dispatchEvent(new CustomEvent('selected', { detail: { row: this.row } }))
       })
     }
 

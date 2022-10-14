@@ -68,8 +68,7 @@ customElements.define('ct-tracker',
       this.shadowRoot.appendChild(template.content.cloneNode(true))
 
       this.playButton = this.shadowRoot.querySelector('#play-button')
-
-      this.selectedNote = null
+      this.cursor = this.shadowRoot.querySelector('ct-cursor')
     }
 
     /**
@@ -87,15 +86,13 @@ customElements.define('ct-tracker',
         this.#handleKeyPress(event)
       })
 
-      for (const seq of this.shadowRoot.querySelectorAll('ct-sequence')) {
-        seq.addEventListener('selected', event => {
-          if (this.selectedNote) {
-            this.selectedNote.removeAttribute('selected')
-          }
-          this.selectedNote = event.detail.note
-          this.selectedNote.setAttribute('selected', '')
+      for (const sequence of this.shadowRoot.querySelectorAll('ct-sequence')) {
+        sequence.addEventListener('selected', event => {
+          this.cursor.setAttribute('column', event.detail.column)
+          this.cursor.setAttribute('row', event.detail.row)
         })
       }
+
       this.playButton.addEventListener('click', () => this.#playPattern())
     }
 
@@ -107,7 +104,8 @@ customElements.define('ct-tracker',
     #handleKeyPress (event) {
       if (!event.repeat) {
         const noteNumber = this.#getNoteFromKey(event.code)
-        if (noteNumber && this.selectedNote) {
+        if (noteNumber) {
+          this.selectedNote = this.#selectNote(this.cursor.column, this.cursor.row)
           if (noteNumber <= 75 && noteNumber >= 48) {
             this.selectedNote.setAttribute('note', noteNumber)
           } else {
@@ -115,6 +113,19 @@ customElements.define('ct-tracker',
           }
         }
       }
+    }
+
+    /**
+     * Select note by column and row.
+     *
+     * @param {Number} column Column
+     * @param {Number} row Row
+     * @returns {HTMLElement} The selected note element.
+     */
+    #selectNote (column, row) {
+      const sequenceElement = this.shadowRoot.querySelector(`ct-sequence[column="${column}"]`)
+      const sequenceNote = sequenceElement.shadowRoot.querySelector(`ct-sequence-note[row="${row}"]`)
+      return sequenceNote
     }
 
     /**
