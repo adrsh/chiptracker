@@ -40,7 +40,7 @@ customElements.define('ct-sequence-note',
      */
     connectedCallback () {
       this.name.textContent = '---'
-      this.addEventListener('click', event => {
+      this.addEventListener('mousedown', event => {
         this.dispatchEvent(new CustomEvent('selected', { detail: { row: this.row } }))
       })
     }

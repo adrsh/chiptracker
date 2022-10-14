@@ -104,11 +104,13 @@ customElements.define('ct-tracker',
     #handleNoteKeyPress (event) {
       if (!event.repeat) {
         const noteNumber = this.#getNoteFromKey(event.code)
+        const keyMapping = this.#getKeyMapping(event.code)
         if (noteNumber) {
           this.selectedNote = this.#selectNote(this.cursor.column, this.cursor.row)
-          if (noteNumber <= 75 && noteNumber >= 48) {
-            this.selectedNote.setAttribute('note', noteNumber)
-          } else {
+          this.selectedNote.setAttribute('note', noteNumber)
+        } else if (keyMapping) {
+          if (keyMapping === 'Delete') {
+            this.selectedNote = this.#selectNote(this.cursor.column, this.cursor.row)
             this.selectedNote.removeAttribute('note')
           }
         }
@@ -116,10 +118,25 @@ customElements.define('ct-tracker',
     }
 
     /**
+     * Get which key that corresponds to which action.
+     *
+     * @param {string} key Keyboard key.
+     * @returns {string} Action that corresponds to the key.
+     */
+    #getKeyMapping (key) {
+      switch (key) {
+        case 'Delete': return 'Delete'
+        case 'Space': return 'Play'
+        default:
+          break
+      }
+    }
+
+    /**
      * Select note by column and row.
      *
-     * @param {Number} column Column
-     * @param {Number} row Row
+     * @param {number} column Column
+     * @param {number} row Row
      * @returns {HTMLElement} The selected note element.
      */
     #selectNote (column, row) {
