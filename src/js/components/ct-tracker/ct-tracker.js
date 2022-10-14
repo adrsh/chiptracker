@@ -83,7 +83,7 @@ customElements.define('ct-tracker',
       }
 
       document.addEventListener('keydown', event => {
-        this.#handleKeyPress(event)
+        this.#handleNoteKeyPress(event)
       })
 
       for (const sequence of this.shadowRoot.querySelectorAll('ct-sequence')) {
@@ -101,7 +101,7 @@ customElements.define('ct-tracker',
      *
      * @param {Event} event The event.
      */
-    #handleKeyPress (event) {
+    #handleNoteKeyPress (event) {
       if (!event.repeat) {
         const noteNumber = this.#getNoteFromKey(event.code)
         if (noteNumber) {
