@@ -83,7 +83,7 @@ customElements.define('ct-tracker',
       }
 
       document.addEventListener('keydown', event => {
-        this.#handleNoteKeyPress(event)
+        this.#handleKeyPress(event)
       })
 
       for (const sequence of this.shadowRoot.querySelectorAll('ct-sequence')) {
@@ -101,17 +101,20 @@ customElements.define('ct-tracker',
      *
      * @param {Event} event The event.
      */
-    #handleNoteKeyPress (event) {
+    #handleKeyPress (event) {
       if (!event.repeat) {
         const noteNumber = this.#getNoteFromKey(event.code)
-        const keyMapping = this.#getKeyMapping(event.code)
+        const key = this.#getKeyFromMapping(event.code)
         if (noteNumber) {
           this.selectedNote = this.#selectNote(this.cursor.column, this.cursor.row)
           this.selectedNote.setAttribute('note', noteNumber)
-        } else if (keyMapping) {
-          if (keyMapping === 'Delete') {
+        } else if (key) {
+          event.preventDefault()
+          if (key === 'Delete') {
             this.selectedNote = this.#selectNote(this.cursor.column, this.cursor.row)
             this.selectedNote.removeAttribute('note')
+          } else if (key === 'Play') {
+            this.#playPattern()
           }
         }
       }
@@ -123,7 +126,7 @@ customElements.define('ct-tracker',
      * @param {string} key Keyboard key.
      * @returns {string} Action that corresponds to the key.
      */
-    #getKeyMapping (key) {
+    #getKeyFromMapping (key) {
       switch (key) {
         case 'Delete': return 'Delete'
         case 'Space': return 'Play'
@@ -170,39 +173,39 @@ customElements.define('ct-tracker',
     #getNoteFromKey (key) {
       switch (key) {
         case 'KeyZ': return '48'
+        case 'KeyS': return '49'
         case 'KeyX': return '50'
+        case 'KeyD': return '51'
         case 'KeyC': return '52'
         case 'KeyV': return '53'
+        case 'KeyG': return '54'
         case 'KeyB': return '55'
+        case 'KeyH': return '56'
         case 'KeyN': return '57'
+        case 'KeyJ': return '58'
         case 'KeyM': return '59'
         case 'Comma': return '60'
-        case 'Period': return '62'
-        case 'Slash': return '64'
-        case 'KeyL': return '61'
-        case 'Semicolon': return '63'
-        case 'KeyS': return '49'
-        case 'KeyD': return '51'
-        case 'KeyG': return '54'
-        case 'KeyH': return '56'
-        case 'KeyJ': return '58'
         case 'KeyQ': return '60'
+        case 'KeyL': return '61'
+        case 'Digit2': return '61'
+        case 'Period': return '62'
         case 'KeyW': return '62'
+        case 'Semicolon': return '63'
+        case 'Digit3': return '63'
+        case 'Slash': return '64'
         case 'KeyE': return '64'
         case 'KeyR': return '65'
+        case 'Digit5': return '66'
         case 'KeyT': return '67'
+        case 'Digit6': return '68'
         case 'KeyY': return '69'
+        case 'Digit7': return '70'
         case 'KeyU': return '71'
         case 'KeyI': return '72'
-        case 'KeyO': return '74'
-        case 'KeyP': return '76'
-        case 'Digit2': return '61'
-        case 'Digit3': return '63'
-        case 'Digit5': return '66'
-        case 'Digit6': return '68'
-        case 'Digit7': return '70'
         case 'Digit9': return '73'
+        case 'KeyO': return '74'
         case 'Digit0': return '75'
+        case 'KeyP': return '76'
         default: return ''
       }
     }
