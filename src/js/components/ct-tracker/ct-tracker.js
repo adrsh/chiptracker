@@ -41,7 +41,6 @@ template.innerHTML = `
     }
   </style>
   <ct-options></ct-options>
-  <button id="play-button">Play</button>
   <div id="pattern">
     <div id="rows"></div>
     <div id="sequences">
@@ -67,7 +66,7 @@ customElements.define('ct-tracker',
       this.attachShadow({ mode: 'open' })
       this.shadowRoot.appendChild(template.content.cloneNode(true))
 
-      this.playButton = this.shadowRoot.querySelector('#play-button')
+      this.controls = this.shadowRoot.querySelector('ct-options')
       this.cursor = this.shadowRoot.querySelector('ct-cursor')
     }
 
@@ -93,7 +92,8 @@ customElements.define('ct-tracker',
         })
       }
 
-      this.playButton.addEventListener('click', () => this.#playPattern())
+      this.controls.addEventListener('play', () => this.#playPattern())
+      this.controls.addEventListener('stop', () => this.#stopPattern())
     }
 
     /**
@@ -130,8 +130,7 @@ customElements.define('ct-tracker',
       switch (key) {
         case 'Delete': return 'Delete'
         case 'Space': return 'Play'
-        default:
-          break
+        default: return null
       }
     }
 
@@ -155,6 +154,16 @@ customElements.define('ct-tracker',
       const sequenceElements = this.shadowRoot.querySelectorAll('ct-sequence')
       for (const sequenceElement of sequenceElements) {
         sequenceElement.sequence.play()
+      }
+    }
+
+    /**
+     * Stops the pattern.
+     */
+    #stopPattern () {
+      const sequenceElements = this.shadowRoot.querySelectorAll('ct-sequence')
+      for (const sequenceElement of sequenceElements) {
+        sequenceElement.sequence.stop()
       }
     }
 

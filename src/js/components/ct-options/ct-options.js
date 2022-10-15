@@ -10,10 +10,10 @@ template.innerHTML = `
     :host {
       display: flex;
       flex-direction: row;
-      font-family: monospace;
     }
   </style>
   <button id="play-button">Play</button>
+  <button id="stop-button">Stop</button>
 `
 
 customElements.define('ct-options',
@@ -30,13 +30,15 @@ customElements.define('ct-options',
       this.shadowRoot.appendChild(template.content.cloneNode(true))
 
       this.playButton = this.shadowRoot.querySelector('#play-button')
+      this.stopButton = this.shadowRoot.querySelector('#stop-button')
     }
 
     /**
      * Called after the element is inserted to the DOM.
      */
     connectedCallback () {
-      this.playButton.addEventListener('click', Chiptune.start())
+      this.playButton.addEventListener('click', () => this.dispatchEvent(new CustomEvent('play')))
+      this.stopButton.addEventListener('click', () => this.dispatchEvent(new CustomEvent('stop')))
     }
 
     /**
