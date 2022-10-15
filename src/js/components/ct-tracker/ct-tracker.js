@@ -40,7 +40,7 @@ template.innerHTML = `
       position: relative;
     }
   </style>
-  <ct-options></ct-options>
+  <ct-options tempo="120"></ct-options>
   <div id="pattern">
     <div id="rows"></div>
     <div id="sequences">
@@ -66,7 +66,7 @@ customElements.define('ct-tracker',
       this.attachShadow({ mode: 'open' })
       this.shadowRoot.appendChild(template.content.cloneNode(true))
 
-      this.controls = this.shadowRoot.querySelector('ct-options')
+      this.options = this.shadowRoot.querySelector('ct-options')
       this.cursor = this.shadowRoot.querySelector('ct-cursor')
     }
 
@@ -92,8 +92,8 @@ customElements.define('ct-tracker',
         })
       }
 
-      this.controls.addEventListener('play', () => this.#playPattern())
-      this.controls.addEventListener('stop', () => this.#stopPattern())
+      this.options.addEventListener('play', () => this.#playPattern())
+      this.options.addEventListener('stop', () => this.#stopPattern())
     }
 
     /**
@@ -153,7 +153,8 @@ customElements.define('ct-tracker',
     #playPattern () {
       const sequenceElements = this.shadowRoot.querySelectorAll('ct-sequence')
       for (const sequenceElement of sequenceElements) {
-        sequenceElement.sequence.play()
+        const tempo = this.options.getAttribute('tempo')
+        sequenceElement.sequence.play(tempo)
       }
     }
 

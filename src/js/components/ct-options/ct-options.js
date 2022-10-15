@@ -14,6 +14,7 @@ template.innerHTML = `
   </style>
   <button id="play-button">Play</button>
   <button id="stop-button">Stop</button>
+  <input type="number" min="32" max="255" value="120" id="tempo"></input>
 `
 
 customElements.define('ct-options',
@@ -31,6 +32,7 @@ customElements.define('ct-options',
 
       this.playButton = this.shadowRoot.querySelector('#play-button')
       this.stopButton = this.shadowRoot.querySelector('#stop-button')
+      this.tempoInput = this.shadowRoot.querySelector('#tempo')
     }
 
     /**
@@ -39,12 +41,37 @@ customElements.define('ct-options',
     connectedCallback () {
       this.playButton.addEventListener('click', () => this.dispatchEvent(new CustomEvent('play')))
       this.stopButton.addEventListener('click', () => this.dispatchEvent(new CustomEvent('stop')))
+
+      this.tempoInput.addEventListener('input', () => this.setAttribute('tempo', this.tempoInput.value))
     }
 
     /**
      * Called after the element is removed from the DOM.
      */
     disconnectedCallback () {
+    }
+
+    /**
+     * Returns element attributes to observe.
+     *
+     * @returns {string[]} An array of attributes to observe.
+     */
+    static get observedAttributes () {
+      return ['tempo']
+    }
+
+    /**
+     * Called by the browser engine when an attribute changes.
+     *
+     * @param {string} name of the attribute.
+     * @param {any} oldValue the old attribute value.
+     * @param {any} newValue the new attribute value.
+     */
+    attributeChangedCallback (name, oldValue, newValue) {
+      if (name === 'tempo') {
+        this.tempo = parseInt(newValue)
+        this.tempoInput.value = this.tempo
+      }
     }
   }
 )
