@@ -10,11 +10,24 @@ template.innerHTML = `
     :host {
       display: flex;
       flex-direction: row;
+      padding: 2rem;
+      font-family: monospace;
+      gap: 1rem;
+    }
+    button, input {
+      font-family: monospace;
+      background-color: black;
+      color: white;
+      border: 1px solid gray;
+    }
+    label {
+      color: white;
     }
   </style>
   <button id="play-button">Play</button>
   <button id="stop-button">Stop</button>
-  <input type="number" min="32" max="255" value="120" id="tempo"></input>
+  <label for="tempo">Tempo</label>
+  <input type="number" min="32" max="255" value="120" id="tempo" name="tempo"></input>
 `
 
 customElements.define('ct-options',

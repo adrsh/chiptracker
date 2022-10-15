@@ -11,8 +11,13 @@ template.innerHTML = `
     :host {
       display: flex;
       flex-direction: column;
-      outline: black solid 1px;
+      outline: #444 solid 3px;
       font-family: monospace;
+      width: 48rem;
+      height: 48rem;
+    }
+    #pattern {
+      overflow-y: scroll;
     }
     #pattern, #sequences {
       display: flex;
@@ -22,7 +27,6 @@ template.innerHTML = `
     #rows {
       display: flex;
       flex-direction: column;
-      border-right: gray solid 1px;
     }
     #rows > div {
       height: 1rem;
@@ -30,11 +34,18 @@ template.innerHTML = `
       display: flex;
       justify-content: center;
       user-select: none;
+      color: green;
+      border-right: 1px gray solid;
+      box-sizing: border-box;
+    }
+    #rows > div:nth-child(4n+1) {
+      color: yellow;
     }
     ct-sequence {
-      border-right: 1px solid #888;
-      box-sizing: border-box;
       width: 2rem;
+    }
+    ct-options {
+      border-bottom: 1px solid gray;
     }
     #sequences {
       position: relative;

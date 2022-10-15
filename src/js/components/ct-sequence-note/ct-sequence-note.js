@@ -10,10 +10,11 @@ template.innerHTML = `
       display: flex;
       flex-direction: column;
       font-family: monospace;
-      height: 1rem;
       user-select: none;
-      width: 2rem;
-      letter-spacing: 0.05rem;
+      color: green;
+      letter-spacing: 0.12rem;
+      border-right: 1px gray solid;
+      box-sizing: border-box;
     }
   </style>
   <div id="name"></div>

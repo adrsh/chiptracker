@@ -8,7 +8,7 @@ template.innerHTML = `
       position: absolute;
       width: 2rem;
       height: 1rem;
-      background-color: #000;
+      background-color: blue;
       opacity: 0.25;
     }
   </style>

@@ -18,19 +18,16 @@ template.innerHTML = `
     }
     #rows > ct-sequence-note {
       height: 1rem;
-      width: 1.5rem;
+      width: 2rem;
       display: flex;
       justify-content: flex-end;
     }
     #list > ct-sequence-note:nth-child(4n+1) {
-      background-color: #eee;
+      background-color: #222;
+      color: yellow;
     }
     #list > ct-sequence-note:nth-child(16n+1) {
-      background-color: #ccc;
-    }
-    ct-sequence-note[selected] {
-      background-color: #4488ff !important;
-      color: white;
+      background-color: #444;
     }
   </style>
   <div id="list"></div>
