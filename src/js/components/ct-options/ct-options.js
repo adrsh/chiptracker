@@ -1,5 +1,4 @@
 import '../ct-sequence'
-import * as Chiptune from '../../webchiptune'
 
 /**
  * The ct-options web component.

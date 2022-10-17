@@ -1,6 +1,7 @@
 import '../ct-sequence'
 import '../ct-options'
 import '../ct-cursor'
+import * as Chiptune from '../../webchiptune'
 
 /**
  * The ct-tracker web component.
@@ -162,21 +163,15 @@ customElements.define('ct-tracker',
      * Plays the pattern.
      */
     #playPattern () {
-      const sequenceElements = this.shadowRoot.querySelectorAll('ct-sequence')
-      for (const sequenceElement of sequenceElements) {
-        const tempo = this.options.getAttribute('tempo')
-        sequenceElement.sequence.play(tempo)
-      }
+      const tempo = this.options.getAttribute('tempo')
+      Chiptune.Pattern.play(tempo)
     }
 
     /**
      * Stops the pattern.
      */
     #stopPattern () {
-      const sequenceElements = this.shadowRoot.querySelectorAll('ct-sequence')
-      for (const sequenceElement of sequenceElements) {
-        sequenceElement.sequence.stop()
-      }
+      Chiptune.Pattern.stop()
     }
 
     /**
