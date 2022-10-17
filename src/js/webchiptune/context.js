@@ -1,3 +1,5 @@
+import { Pattern } from './pattern'
+
 /**
  * Manages the audio context for the Chiptune module.
  */
@@ -7,6 +9,7 @@ class Context {
    */
   constructor () {
     this.audioContext = new AudioContext()
+    this.pattern = new Pattern()
   }
 
   /**
@@ -32,6 +35,15 @@ class Context {
    */
   getAudioContext () {
     return this.audioContext
+  }
+
+  /**
+   * Get the pattern.
+   *
+   * @returns {Pattern} Chiptune pattern.
+   */
+  getPattern () {
+    return this.pattern
   }
 }
 

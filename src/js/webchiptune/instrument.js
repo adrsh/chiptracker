@@ -13,7 +13,6 @@ export class Instrument {
    */
   constructor (type) {
     this.audioContext = context.getAudioContext()
-    this.context = context
     this.oscillator = new OscillatorNode(this.audioContext, { type })
     this.gainNode = new GainNode(this.audioContext, { gain: 0 })
     this.oscillator.connect(this.gainNode).connect(this.audioContext.destination)
@@ -23,10 +22,10 @@ export class Instrument {
   /**
    * Plays a note at a specified time.
    *
-   * @param {Chiptune.Note} note Which note to play. Ex. 48.
+   * @param {Note} note Which note to play. Ex. 48.
    * @param {number} time Time to play the note.
    */
-  play (note, time = this.context.now()) {
+  play (note, time = context.now()) {
     // Cancels any scheduled and ongoing changes to the gain value.
     this.gainNode.gain.cancelAndHoldAtTime(time)
 
@@ -45,7 +44,7 @@ export class Instrument {
    *
    * @param {number} time Time to release the note.
    */
-  release (time = this.context.now()) {
+  release (time = context.now()) {
     this.gainNode.gain.cancelAndHoldAtTime(time)
     this.gainNode.gain.linearRampToValueAtTime(0, time + 0.5)
   }
@@ -55,7 +54,7 @@ export class Instrument {
    *
    * @param {number} time When to stop.
    */
-  stop (time = this.context.now()) {
+  stop (time = context.now()) {
     this.gainNode.gain.cancelScheduledValues(time)
     this.oscillator.frequency.cancelScheduledValues(time)
     this.gainNode.gain.linearRampToValueAtTime(0, time + 0.02)
