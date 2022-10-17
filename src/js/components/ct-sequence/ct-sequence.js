@@ -96,6 +96,7 @@ customElements.define('ct-sequence',
      * Called after the element is removed from the DOM.
      */
     disconnectedCallback () {
+      Chiptune.Pattern.remove(this.sequence)
     }
 
     /**

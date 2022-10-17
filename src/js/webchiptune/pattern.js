@@ -27,7 +27,7 @@ export class Pattern {
    * @param {Sequence} sequence
    */
   remove (sequence) {
-    this.#sequences.remove(sequence)
+    this.#sequences.delete(sequence)
   }
 
   /**
