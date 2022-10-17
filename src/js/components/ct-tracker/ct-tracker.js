@@ -184,44 +184,44 @@ customElements.define('ct-tracker',
      * Returns which note that is mapped to which key on the keyboard.
      *
      * @param {string} key Key that was pressed on the keyboard.
-     * @returns {string} Note that should be played.
+     * @returns {number} Note that should be played.
      */
     #getNoteFromKey (key) {
       switch (key) {
-        case 'KeyZ': return '48'
-        case 'KeyS': return '49'
-        case 'KeyX': return '50'
-        case 'KeyD': return '51'
-        case 'KeyC': return '52'
-        case 'KeyV': return '53'
-        case 'KeyG': return '54'
-        case 'KeyB': return '55'
-        case 'KeyH': return '56'
-        case 'KeyN': return '57'
-        case 'KeyJ': return '58'
-        case 'KeyM': return '59'
-        case 'Comma': return '60'
-        case 'KeyQ': return '60'
-        case 'KeyL': return '61'
-        case 'Digit2': return '61'
-        case 'Period': return '62'
-        case 'KeyW': return '62'
-        case 'Semicolon': return '63'
-        case 'Digit3': return '63'
-        case 'Slash': return '64'
-        case 'KeyE': return '64'
-        case 'KeyR': return '65'
-        case 'Digit5': return '66'
-        case 'KeyT': return '67'
-        case 'Digit6': return '68'
-        case 'KeyY': return '69'
-        case 'Digit7': return '70'
-        case 'KeyU': return '71'
-        case 'KeyI': return '72'
-        case 'Digit9': return '73'
-        case 'KeyO': return '74'
-        case 'Digit0': return '75'
-        case 'KeyP': return '76'
+        case 'KeyZ': return 48
+        case 'KeyS': return 49
+        case 'KeyX': return 50
+        case 'KeyD': return 51
+        case 'KeyC': return 52
+        case 'KeyV': return 53
+        case 'KeyG': return 54
+        case 'KeyB': return 55
+        case 'KeyH': return 56
+        case 'KeyN': return 57
+        case 'KeyJ': return 58
+        case 'KeyM': return 59
+        case 'Comma': return 60
+        case 'KeyQ': return 60
+        case 'KeyL': return 61
+        case 'Digit2': return 61
+        case 'Period': return 62
+        case 'KeyW': return 62
+        case 'Semicolon': return 63
+        case 'Digit3': return 63
+        case 'Slash': return 64
+        case 'KeyE': return 64
+        case 'KeyR': return 65
+        case 'Digit5': return 66
+        case 'KeyT': return 67
+        case 'Digit6': return 68
+        case 'KeyY': return 69
+        case 'Digit7': return 70
+        case 'KeyU': return 71
+        case 'KeyI': return 72
+        case 'Digit9': return 73
+        case 'KeyO': return 74
+        case 'Digit0': return 75
+        case 'KeyP': return 76
         default: return ''
       }
     }
