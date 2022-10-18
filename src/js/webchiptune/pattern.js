@@ -1,7 +1,7 @@
 import { Sequence } from './sequence'
 
 /**
- * Represents a pattern (multiple sequences)
+ * Represents a pattern that contains multiple sequences.
  */
 export class Pattern {
   #sequences

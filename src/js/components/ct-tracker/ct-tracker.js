@@ -222,7 +222,7 @@ customElements.define('ct-tracker',
         case 'KeyO': return 74
         case 'Digit0': return 75
         case 'KeyP': return 76
-        default: return ''
+        default: return null
       }
     }
   }
