@@ -122,7 +122,7 @@ A5 och A6 misslyckas eftersom de i nuläget inte är implementerade.
 
 ## Applikationen i nuläget
 
-Applikationen är byggd med *custom elements* och kommunicerar med events och attribut.
+Applikationen är byggd med *custom elements* och kommunicerar med events och attribut. Applikationen har i dagsläget grundläggande funktionalitet som är begränsad till funktionaliteten i Webchiptune.
 
 ## Framtida förbättringar
 

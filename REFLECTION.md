@@ -130,7 +130,7 @@ I mitt fall är Note-klassen mer som en datastruktur och borde istället ge till
 
 Boken tycker att man inte ska returnera null eftersom man måste kontrollera om värdet som har returnerats är null eller inte. Vilket jag tror har med att null varken är true eller false i Java, men är *falsy* i Javascript. Men jag kan förstå principen att inte använda null och validera på något annat sätt istället.
 
-Här är dock två exempel på liknande kod som jag har just nu. Övre exemplet är från modulen och den andra från applikationen. Jag ville att modulen skulle vara mer robust och använde Exceptions i vissa fall.
+Här är dock två exempel på liknande kod som jag har just nu. Övre exemplet är från modulen och den andra från applikationen. Jag ville att modulen skulle vara mer robust och använde Exceptions i några fall, men frågan är om det verkligen gjorde någon skillnad.
 ```js
   case 'B': return 11
   default: throw new Error('Invalid note name.')
@@ -142,6 +142,18 @@ Här är dock två exempel på liknande kod som jag har just nu. Övre exemplet 
 }
 ```
 
+Jag känner dock att min felhantering är lite hipp som happ, specifikt i Note-klassen. Jag sätter notnumret, och istället för att använda det felkontrollerade nya #number så använder jag fortfarande noteNumber till resterande funktioner, och kunde istället använda *getters* till frequency, octave, och name, istället för att sätta dem i denna funktion.
+
+```js
+#setNote (noteNumber) {
+	this.#setNumber(noteNumber)
+	this.#frequency = this.noteToFrequency(noteNumber)
+	this.#octave = Math.floor((noteNumber - 12) / 12)
+	this.#name = this.noteIndexToNoteName(noteNumber % 12)
+}
+```
+
+Nu i efterhand har jag strukturerat om Note-klassen en del.
 
 ## Boundaries
 
@@ -167,7 +179,10 @@ play (note, time = context.now()) {
 
 ## Unit Tests
 
-Jag vet att testning är en viktig del i mjukvaruutveckling, men det är verkligen något som jag borde sätta mig in i mer. Visst kan man göra manuella tester, men 
+Jag vet att testning är en viktig del i mjukvaruutveckling, men det är verkligen något som jag borde sätta mig in i mer. Visst kan man göra manuella tester för att testa gränssnitt, men just att testa enskilda funktioner är något som helst görs automatiskt.
+
+Boken säger att det är testerna som gör att man inte är rädd för att ändra koden, att ju fler tester man har desto mindre är man rädd för att göra något fel. Det stämmer nog och ger en trygghet i och med att man snabbt kan se om det har gått helt snett.
+
 
 ## Classes
 
@@ -176,4 +191,4 @@ Jag var inte helt nöjd med filstrukturen av webchiptune-modulen. Alla klasser o
 
 ## Systems
 
-Jag är absolut inte säker på om jag har byggt modulen på rätt sätt. Boken nämner att det är en myt att system görs rätt från början. Det är svårt att säga redan nu vilka problem som kan uppstå i framtiden. Det kanske går att strukturera koden på ett sätt som gör det lättare att bygga vidare och förbättra den. 
+Jag är absolut inte säker på om jag har byggt modulen på rätt sätt. Boken nämner att det är en myt att system görs rätt från början. Det är svårt att säga redan nu vilka problem som kan uppstå i framtiden. Man kan ju göra sitt bästa att strukturera koden på ett sätt som gör det lättare att bygga vidare på den.
