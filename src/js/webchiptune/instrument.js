@@ -1,22 +1,23 @@
 import { context } from './context'
 
 /**
- *
+ * Represents an instrument in the Chiptune module.
  */
 export class Instrument {
-  oscillator
-  gainNode
+  #oscillator
+  #gainNode
+  #audioContext
   /**
    * Constructor for Instrument.
    *
    * @param {string} type Oscillator type.
    */
   constructor (type) {
-    this.audioContext = context.getAudioContext()
-    this.oscillator = new OscillatorNode(this.audioContext, { type })
-    this.gainNode = new GainNode(this.audioContext, { gain: 0 })
-    this.oscillator.connect(this.gainNode).connect(this.audioContext.destination)
-    this.oscillator.start()
+    this.#audioContext = context.getAudioContext()
+    this.#oscillator = new OscillatorNode(this.#audioContext, { type })
+    this.#gainNode = new GainNode(this.#audioContext, { gain: 0 })
+    this.#oscillator.connect(this.#gainNode).connect(this.#audioContext.destination)
+    this.#oscillator.start()
   }
 
   /**
@@ -27,16 +28,16 @@ export class Instrument {
    */
   play (note, time = context.now()) {
     // Cancels any scheduled and ongoing changes to the gain value.
-    this.gainNode.gain.cancelAndHoldAtTime(time)
+    this.#gainNode.gain.cancelAndHoldAtTime(time)
 
     // Changes frequency of the oscillator.
-    this.oscillator.frequency.setValueAtTime(note.getFrequency(), time)
+    this.#oscillator.frequency.setValueAtTime(note.frequency, time)
 
     // Sets the gain to 0.1 at the specified time.
-    this.gainNode.gain.setValueAtTime(0.1, time)
+    this.#gainNode.gain.setValueAtTime(0.1, time)
 
     // Ramps the gain to zero linearly one second after the time.
-    this.gainNode.gain.linearRampToValueAtTime(0, time + 1)
+    this.#gainNode.gain.linearRampToValueAtTime(0, time + 1)
   }
 
   /**
@@ -45,8 +46,8 @@ export class Instrument {
    * @param {number} time Time to release the note.
    */
   release (time = context.now()) {
-    this.gainNode.gain.cancelAndHoldAtTime(time)
-    this.gainNode.gain.linearRampToValueAtTime(0, time + 0.5)
+    this.#gainNode.gain.cancelAndHoldAtTime(time)
+    this.#gainNode.gain.linearRampToValueAtTime(0, time + 0.5)
   }
 
   /**
@@ -55,8 +56,8 @@ export class Instrument {
    * @param {number} time When to stop.
    */
   stop (time = context.now()) {
-    this.gainNode.gain.cancelScheduledValues(time)
-    this.oscillator.frequency.cancelScheduledValues(time)
-    this.gainNode.gain.linearRampToValueAtTime(0, time + 0.02)
+    this.#gainNode.gain.cancelScheduledValues(time)
+    this.#oscillator.frequency.cancelScheduledValues(time)
+    this.#gainNode.gain.linearRampToValueAtTime(0, time + 0.02)
   }
 }

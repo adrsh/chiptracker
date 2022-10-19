@@ -72,7 +72,7 @@ customElements.define('ct-sequence-note',
       if (name === 'note') {
         if (newValue) {
           this.note = new Chiptune.Note(parseInt(newValue))
-          this.name.textContent = this.note.getNotation()
+          this.name.textContent = this.note.notation
         } else {
           this.note = null
           this.name.textContent = '---'

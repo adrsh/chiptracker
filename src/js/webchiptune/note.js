@@ -3,9 +3,6 @@
  */
 export class Note {
   #number
-  #frequency
-  #octave
-  #name
   /**
    * Constructor for Note.
    *
@@ -14,38 +11,25 @@ export class Note {
   constructor (note) {
     try {
       if (typeof note === 'number') {
-        this.#setNote(note)
+        this.number = note
       } else if (typeof note === 'string') {
-        this.#setNote(this.notationToNoteNumber(note))
+        this.number = this.#noteNotationToNoteNumber(note)
       }
-      this.#frequency = this.noteToFrequency(this.#number)
     } catch (error) {
       console.error(error)
     }
   }
 
   /**
-   * Set note parameters.
-   *
-   * @param {number} noteNumber Note MIDI number.
-   */
-  #setNote (noteNumber) {
-    this.#setNumber(noteNumber)
-    this.#frequency = this.noteToFrequency(noteNumber)
-    this.#octave = Math.floor((noteNumber - 12) / 12)
-    this.#name = this.noteIndexToNoteName(noteNumber % 12)
-  }
-
-  /**
    * Sets the number of Note.
    *
-   * @param {number} number Number to set the note to.
+   * @param {number} value Number to set the note to.
    */
-  #setNumber (number) {
-    if (number < 12 || number > 120) {
+  set number (value) {
+    if (value < 12 || value > 120) {
       throw new Error('Note is out of range.')
     }
-    this.#number = number
+    this.#number = value
   }
 
   /**
@@ -53,7 +37,7 @@ export class Note {
    *
    * @returns {number} Note number.
    */
-  getNumber () {
+  get number () {
     return this.#number
   }
 
@@ -62,8 +46,8 @@ export class Note {
    *
    * @returns {number} Note frequency.
    */
-  getFrequency () {
-    return this.#frequency
+  get frequency () {
+    return 440 * 2 ** ((this.#number - 69) / 12)
   }
 
   /**
@@ -71,8 +55,8 @@ export class Note {
    *
    * @returns {string} Note notation.
    */
-  getNotation () {
-    return this.noteNumberToNotation(this.#number)
+  get notation () {
+    return this.name + this.octave
   }
 
   /**
@@ -80,8 +64,8 @@ export class Note {
    *
    * @returns {string} Note octave.
    */
-  getOctave () {
-    return this.#octave
+  get octave () {
+    return Math.floor((this.#number - 12) / 12)
   }
 
   /**
@@ -89,18 +73,8 @@ export class Note {
    *
    * @returns {string} Note name.
    */
-  getName () {
-    return this.#name
-  }
-
-  /**
-   * Convert MIDI note to its corresponding frequency.
-   *
-   * @param {number} note MIDI note to convert to frequency.
-   * @returns {number} Frequency corresponding to the note.
-   */
-  noteToFrequency (note) {
-    return 440 * 2 ** ((note - 69) / 12)
+  get name () {
+    return this.#noteIndexToNoteName(this.#number % 12)
   }
 
   /**
@@ -109,27 +83,46 @@ export class Note {
    * @param {string} notation Note notation to convert to note number. Ex. C4 = 60. C#4 = 61
    * @returns {number} Note number that the note notation corresponds to.
    */
-  notationToNoteNumber (notation) {
+  #noteNotationToNoteNumber (notation) {
     if (notation.length > 3 || notation.length < 2) {
       throw new Error('Note notation has an invalid format.')
     }
 
-    // Extract octave
+    const octave = this.#extractOctaveFromNoteNotation(notation)
+    const noteName = this.#extractNoteNameFromNoteNotation(notation)
+    const noteIndex = this.#noteNameToNoteIndex(noteName)
+
+    // C4 is 60, but (octave * 12) + noteIndex would return 48.
+    // Which is why we have to add 12.
+    return (octave * 12) + noteIndex + 12
+  }
+
+  /**
+   * Extract octave from notation.
+   *
+   * @param {string} notation
+   * @returns {number} octave Note octave.
+   */
+  #extractOctaveFromNoteNotation (notation) {
     const octave = parseInt(notation.charAt(notation.length - 1))
     if (isNaN(octave) || octave < 0 || octave > 8) {
       throw new Error('Octave is out of range.')
     }
+    return octave
+  }
 
-    // Extract note name
-    let noteName
+  /**
+   * Extract note name from notation.
+   *
+   * @param {string} notation
+   * @returns {string} Note name.
+   */
+  #extractNoteNameFromNoteNotation (notation) {
     if (notation.length === 2) {
-      noteName = notation.slice(0, 1)
+      return notation.slice(0, 1)
     } else if (notation.length === 3) {
-      noteName = notation.slice(0, 2)
+      return notation.slice(0, 2)
     }
-
-    // Octave needs to add one because C0 is octave 0 but note number 12.
-    return (octave + 1) * 12 + this.noteNameToNoteIndex(noteName)
   }
 
   /**
@@ -138,7 +131,7 @@ export class Note {
    * @param {string} noteName Name of note to convert to index. C = 0, C# = 1...
    * @returns {number} Note name.
    */
-  noteNameToNoteIndex (noteName) {
+  #noteNameToNoteIndex (noteName) {
     switch (noteName) {
       case 'C': return 0
       case 'C#': return 1
@@ -157,31 +150,12 @@ export class Note {
   }
 
   /**
-   * Convert MIDI note to notation.
-   *
-   * @param {number} note MIDI Note to convert to notation
-   * @returns {string} Notation of MIDI note.
-   */
-  noteNumberToNotation (note) {
-    if (note < 12 || note > 120) {
-      throw new Error('Note needs to be between 12 and 119.')
-    }
-    const noteIndex = note % 12
-    const noteName = this.noteIndexToNoteName(noteIndex)
-    const octave = Math.floor((note - 12) / 12)
-    return noteName + octave
-  }
-
-  /**
    * Convert note index to note name.
    *
-   * @param {number} noteIndex Note to convert to name, ex. 0 = A, 1 = A#...
+   * @param {number} noteIndex Note to convert to name, ex. 0 = C, 1 = C#...
    * @returns {string} Note name.
    */
-  noteIndexToNoteName (noteIndex) {
-    if (noteIndex < 0 || noteIndex > 11) {
-      throw new Error('Note index needs to be between 0 and 11.')
-    }
+  #noteIndexToNoteName (noteIndex) {
     switch (noteIndex) {
       case 0: return 'C'
       case 1: return 'C#'
