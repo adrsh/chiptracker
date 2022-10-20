@@ -94,7 +94,9 @@ customElements.define('ct-tracker',
       }
 
       document.addEventListener('keydown', event => {
-        this.#handleKeyPress(event)
+        if (!event.repeat) {
+          this.#handleKeyDownEvent(event)
+        }
       })
 
       for (const sequence of this.shadowRoot.querySelectorAll('ct-sequence')) {
@@ -113,22 +115,66 @@ customElements.define('ct-tracker',
      *
      * @param {Event} event The event.
      */
-    #handleKeyPress (event) {
-      if (!event.repeat) {
-        const noteNumber = this.#getNoteFromKey(event.code)
-        const key = this.#getKeyFromMapping(event.code)
-        if (noteNumber) {
-          this.selectedNote = this.#selectNote(this.cursor.column, this.cursor.row)
-          this.selectedNote.setAttribute('note', noteNumber)
-        } else if (key) {
-          event.preventDefault()
-          if (key === 'Delete') {
-            this.selectedNote = this.#selectNote(this.cursor.column, this.cursor.row)
-            this.selectedNote.removeAttribute('note')
-          } else if (key === 'Play') {
-            this.#playPattern()
-          }
-        }
+    #handleKeyDownEvent (event) {
+      if (this.#isNoteKey(event.code)) {
+        this.#handleNoteEvent(event)
+      } else if (this.#isActionKey(event.code)) {
+        this.#handleActionEvent(event)
+      }
+    }
+
+    /**
+     * Check if the key is mapped to a note.
+     *
+     * @param {string} key Key to check.
+     * @returns {boolean} If the key is mapped to a note, true.
+     */
+    #isNoteKey (key) {
+      if (this.#getNoteFromKey(key)) {
+        return true
+      } else {
+        return false
+      }
+    }
+
+    /**
+     * Check if the key is mapped to an action.
+     *
+     * @param {string} key Key to check.
+     * @returns {boolean} If the key is mapped to an action, true.
+     */
+    #isActionKey (key) {
+      if (this.#getKeyFromMapping(key)) {
+        return true
+      } else {
+        return false
+      }
+    }
+
+    /**
+     * Handle note key press event.
+     *
+     * @param {Event} event
+     */
+    #handleNoteEvent (event) {
+      const noteNumber = this.#getNoteFromKey(event.code)
+      this.selectedNote = this.#selectNote(this.cursor.column, this.cursor.row)
+      this.selectedNote.setAttribute('note', noteNumber)
+    }
+
+    /**
+     * Handle action key press event.
+     *
+     * @param {Event} event
+     */
+    #handleActionEvent (event) {
+      event.preventDefault()
+      const key = this.#getKeyFromMapping(event.code)
+      if (key === 'Delete') {
+        this.selectedNote = this.#selectNote(this.cursor.column, this.cursor.row)
+        this.selectedNote.removeAttribute('note')
+      } else if (key === 'Play') {
+        this.#playPattern()
       }
     }
 
@@ -163,6 +209,7 @@ customElements.define('ct-tracker',
      * Plays the pattern.
      */
     #playPattern () {
+      Chiptune.start()
       const tempo = this.options.getAttribute('tempo')
       Chiptune.Pattern.play(tempo)
     }

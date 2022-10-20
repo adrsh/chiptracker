@@ -50,7 +50,6 @@ customElements.define('ct-sequence',
 
       this.instrument = new Chiptune.Instrument(this.getAttribute('instrument'))
       this.sequence = new Chiptune.Sequence(this.instrument)
-
       Chiptune.Pattern.add(this.sequence)
     }
 
