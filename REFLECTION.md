@@ -40,9 +40,9 @@ Ett förbättringsförslag är det nedanstående där jag bryter ut stora delar.
 
 ```js
 #handleKeyDownEvent (event) {
-	if (isNoteKey(event.code)) {
+	if (this.#isNoteKey(event.code)) {
 		this.#handleNoteEvent(event)
-	} else if (isActionKey(event.code)) {
+	} else if (this.#isActionKey(event.code)) {
 		this.#handleActionEvent(event)
 	}
 }
@@ -109,6 +109,7 @@ export function start () {
 ```
 
 
+
 ## Objects and Data Structures
 Efter att ha sett på föreläsningen så blev jag osäker på om jag använder getters och setters på rätt sätt. Just nu gör jag mer eller mindre som om det vore skrivet i Java, det vill säga på följande sätt:
 ```js
@@ -117,18 +118,25 @@ getNotation () {
 }
 ```
 
+I mitt fall är Note-klassen mer som en datastruktur och borde istället ge tillgång till variabler på nedanstående sätt, om jag har förstått rätt.
 ```js
 get notation () {
-	return this.noteNumberToNotation(this.#number)
+	return this.name + this.octave
+}
+
+get octave () {
+	return Math.floor((this.#number - 12) / 12)
+}
+
+get name () {
+	return this.#noteIndexToNoteName(this.#number % 12)
 }
 ```
-
-I mitt fall är Note-klassen mer som en datastruktur och borde istället ge tillgång till variabler på nedanstående sätt, om jag har förstått rätt.
 
 
 ## Error Handling
 
-Boken tycker att man inte ska returnera null eftersom man måste kontrollera om värdet som har returnerats är null eller inte. Vilket jag tror har med att null varken är true eller false i Java, men är *falsy* i Javascript. Men jag kan förstå principen att inte använda null och validera på något annat sätt istället.
+Boken tycker att man inte ska returnera null eftersom man måste kontrollera om värdet som har returnerats är null eller inte. Till exempel att skicka en tom lista istället för null. Men jag kan förstå principen att inte använda null och validera på något annat sätt, eller kasta ett fel istället.
 
 Här är dock två exempel på liknande kod som jag har just nu. Övre exemplet är från modulen och den andra från applikationen. Jag ville att modulen skulle vara mer robust och använde Exceptions i några fall, men frågan är om det verkligen gjorde någon skillnad.
 ```js
@@ -153,20 +161,20 @@ Jag känner dock att min felhantering är lite hipp som happ, specifikt i Note-k
 }
 ```
 
-Nu i efterhand har jag strukturerat om Note-klassen en del.
+Sedan jag skrev detta har jag strukturerat om Note-klassen en del och bytt ut de privata fälten till getters enligt Javascript. Istället blev det bara att hålla koll på variabeln *number* för alla resterande egenskaper.
 
 ## Boundaries
 
 I modulen använder jag Web Audio API:et som kan vara lite komplicerat att förstå, och därför skrev jag lite kommentarer om vad det är som sker för att själv kunna komma ihåg det. Det tog en stund att sätta sig in i det och lista ut hur det fungerar, och då inser man att kodexempel är rätt så viktigt för att någon annan ska förstå vad min egna modul gör.
 
-Exempel på kod där jag använder Web Audio API.
+Exempel på kod där jag använder Web Audio API och försöker förstå mig på vad som händer.
 ```js
 play (note, time = context.now()) {
 	// Cancels any scheduled and ongoing changes to the gain value.
 	this.gainNode.gain.cancelAndHoldAtTime(time)
 
 	// Changes frequency of the oscillator.
-	this.oscillator.frequency.setValueAtTime(note.getFrequency(), time)
+	this.oscillator.frequency.setValueAtTime(note.frequency, time)
 
 	// Sets the gain to 0.1 at the specified time.
 	this.gainNode.gain.setValueAtTime(0.1, time)
@@ -179,16 +187,33 @@ play (note, time = context.now()) {
 
 ## Unit Tests
 
-Jag vet att testning är en viktig del i mjukvaruutveckling, men det är verkligen något som jag borde sätta mig in i mer. Visst kan man göra manuella tester för att testa gränssnitt, men just att testa enskilda funktioner är något som helst görs automatiskt.
+Jag vet att testning är en viktig del i mjukvaruutveckling, och det är verkligen något som jag borde sätta mig in i mer. Visst kan man göra manuella tester för att testa gränssnitt, men just att testa enskilda funktioner är något som helst görs automatiskt.
 
 Boken säger att det är testerna som gör att man inte är rädd för att ändra koden, att ju fler tester man har desto mindre är man rädd för att göra något fel. Det stämmer nog och ger en trygghet i och med att man snabbt kan se om det har gått helt snett.
+
+Utifrån sett ser modulen säkerligen pålitligare ut om den är vältestad.
 
 
 ## Classes
 
 Jag var inte helt nöjd med filstrukturen av webchiptune-modulen. Alla klasser och funktioner låg i en och samma fil, vilket var på grund av att jag inte lyckades lösa så att klasserna har tillgång till samma AudioContext om de ligger i olika filer. Detta har jag nu löst och nu har modulen en bättre filstruktur.
 
+Variabler i Instrument gjordes privata för att kapsla in dem och metoder i Note gjordes privata.
+
+```js
+#oscillator
+#gainNode
+#audioContext
+```
+
+```js
+#noteNotationToNoteNumber (notation)
+```
+
+Föreläsningen om objekt och felhantering gjorde att jag skrev om kod i Note-klassen i modulen och strukturerade det på ett sätt som jag tror är bättre i alla fall.
+
 
 ## Systems
 
-Jag är absolut inte säker på om jag har byggt modulen på rätt sätt. Boken nämner att det är en myt att system görs rätt från början. Det är svårt att säga redan nu vilka problem som kan uppstå i framtiden. Man kan ju göra sitt bästa att strukturera koden på ett sätt som gör det lättare att bygga vidare på den.
+Jag är absolut inte säker på om jag har byggt modulen på rätt sätt. Boken nämner att det är en myt att system görs rätt från början. Det är svårt att säga redan nu vilka problem som kan uppstå i framtiden. Man kan ju göra sitt bästa att strukturera koden på ett sätt som gör det lättare att förstå den och kunna bygga vidare på den.
+
