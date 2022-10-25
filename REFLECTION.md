@@ -17,22 +17,22 @@ Sökbarheten är säkert bättre med det övre alernativet i och med att det sku
 Här kan vi dock se ett exempel på en funktion som gör alldeles för många saker, och där jag inte har följt bokens råd. Funktionen såg inte ut så här från början, utan det lades på nya saker allt eftersom, och då får man väl helt enkelt ta ett beslut att strukturera om hela funktionen.
 ```js
 #handleKeyPress (event) {
-	if (!event.repeat) {
-		const noteNumber = this.#getNoteFromKey(event.code)
-		const key = this.#getKeyFromMapping(event.code)
-		if (noteNumber) {
-			this.selectedNote = this.#selectNote(this.cursor.column, this.cursor.row)
-			this.selectedNote.setAttribute('note', noteNumber)
-		} else if (key) {
-			event.preventDefault()
-			if (key === 'Delete') {
-				this.selectedNote = this.#selectNote(this.cursor.column, this.cursor.row)
-				this.selectedNote.removeAttribute('note')
-			} else if (key === 'Play') {
-				this.#playPattern()
-			}
-		}
-	}
+  if (!event.repeat) {
+    const noteNumber = this.#getNoteFromKey(event.code)
+    const key = this.#getKeyFromMapping(event.code)
+    if (noteNumber) {
+      this.selectedNote = this.#selectNote(this.cursor.column, this.cursor.row)
+      this.selectedNote.setAttribute('note', noteNumber)
+    } else if (key) {
+      event.preventDefault()
+      if (key === 'Delete') {
+        this.selectedNote = this.#selectNote(this.cursor.column, this.cursor.row)
+        this.selectedNote.removeAttribute('note')
+      } else if (key === 'Play') {
+        this.#playPattern()
+      }
+    }
+  }
 }
 ```
 
@@ -40,11 +40,11 @@ Ett förbättringsförslag är det nedanstående där jag bryter ut stora delar.
 
 ```js
 #handleKeyDownEvent (event) {
-	if (this.#isNoteKey(event.code)) {
-		this.#handleNoteEvent(event)
-	} else if (this.#isActionKey(event.code)) {
-		this.#handleActionEvent(event)
-	}
+  if (this.#isNoteKey(event.code)) {
+    this.#handleNoteEvent(event)
+  } else if (this.#isActionKey(event.code)) {
+    this.#handleActionEvent(event)
+  }
 }
 ```
 
@@ -53,40 +53,40 @@ Ett förbättringsförslag är det nedanstående där jag bryter ut stora delar.
 Självförklarande kod är något som jag har börjat att tänka på oftare, istället för att skriva en lång if-sats med många olika jämförelser, så bryter man ut det och gör det mer lättläsligt.
 ```js
 if (event.key === 'ArrowLeft' || event.key === 'ArrowRight' || event.key === 'ArrowUp' || event.key === 'ArrowDown') {
-	event.preventDefault()
-	this.#handleArrowKeys(event.key)
+  event.preventDefault()
+  this.#handleArrowKeys(event.key)
 }
 ```
 ```js
 if (this.#isArrowKey(event.key)) {
-	event.preventDefault()
-	this.#handleArrowKeys(event.key)
+  event.preventDefault()
+  this.#handleArrowKeys(event.key)
 }
 ```
 
 Här är dock något som skulle kunna förbättras istället för att ha en eventuellt lite svårtolkad kommentar. Det är rätt så uppenbart vad som kan brytas ut här till egna funktioner i och med att kommentarerna säger *Extract octave* och *Extract note name*.
 ```js
 notationToNoteNumber (notation) {
-	if (notation.length > 3 || notation.length < 2) {
-		throw new Error('Note notation has an invalid format.')
-	}
+  if (notation.length > 3 || notation.length < 2) {
+    throw new Error('Note notation has an invalid format.')
+  }
 
-	// Extract octave
-	const octave = parseInt(notation.charAt(notation.length - 1))
-	if (isNaN(octave) || octave < 0 || octave > 8) {
-		throw new Error('Octave is out of range.')
-	}
+  // Extract octave
+  const octave = parseInt(notation.charAt(notation.length - 1))
+  if (isNaN(octave) || octave < 0 || octave > 8) {
+    throw new Error('Octave is out of range.')
+  }
 
-	// Extract note name
-	let noteName
-	if (notation.length === 2) {
-		noteName = notation.slice(0, 1)
-	} else if (notation.length === 3) {
-		noteName = notation.slice(0, 2)
-	}
+  // Extract note name
+  let noteName
+  if (notation.length === 2) {
+    noteName = notation.slice(0, 1)
+  } else if (notation.length === 3) {
+    noteName = notation.slice(0, 2)
+  }
 
-	// Octave needs to add one because C0 is octave 0 but note number 12.
-	return (octave + 1) * 12 + this.noteNameToNoteIndex(noteName)
+  // Octave needs to add one because C0 is octave 0 but note number 12.
+  return (octave + 1) * 12 + this.noteNameToNoteIndex(noteName)
 }
 ```
 
@@ -98,7 +98,7 @@ Boken skriver om *Team Rules* som handlar om ett utvecklingsteam bör komma öve
 
 ```js
 export function start(){
-	context.start();
+    context.start();
 }
 ```
 eller
@@ -114,22 +114,22 @@ ESLint gör det möjligt att hitta och fixa problem automatiskt och editorn hjä
 Efter att ha sett på föreläsningen så blev jag osäker på om jag använder getters och setters på rätt sätt. Just nu gör jag mer eller mindre som om det vore skrivet i Java, det vill säga på följande sätt:
 ```js
 getNotation () {
-	return this.noteNumberToNotation(this.#number)
+  return this.noteNumberToNotation(this.#number)
 }
 ```
 
 I mitt fall är Note-klassen mer som en datastruktur och borde istället ge tillgång till variabler på nedanstående sätt, om jag har förstått rätt.
 ```js
 get notation () {
-	return this.name + this.octave
+  return this.name + this.octave
 }
 
 get octave () {
-	return Math.floor((this.#number - 12) / 12)
+  return Math.floor((this.#number - 12) / 12)
 }
 
 get name () {
-	return this.#noteIndexToNoteName(this.#number % 12)
+  return this.#noteIndexToNoteName(this.#number % 12)
 }
 ```
 
@@ -154,10 +154,10 @@ Jag känner dock att min felhantering är lite hipp som happ, specifikt i Note-k
 
 ```js
 #setNote (noteNumber) {
-	this.#setNumber(noteNumber)
-	this.#frequency = this.noteToFrequency(noteNumber)
-	this.#octave = Math.floor((noteNumber - 12) / 12)
-	this.#name = this.noteIndexToNoteName(noteNumber % 12)
+  this.#setNumber(noteNumber)
+  this.#frequency = this.noteToFrequency(noteNumber)
+  this.#octave = Math.floor((noteNumber - 12) / 12)
+  this.#name = this.noteIndexToNoteName(noteNumber % 12)
 }
 ```
 
@@ -170,17 +170,17 @@ I modulen använder jag Web Audio API:et som kan vara lite komplicerat att förs
 Exempel på kod där jag använder Web Audio API och försöker förstå mig på vad som händer.
 ```js
 play (note, time = context.now()) {
-	// Cancels any scheduled and ongoing changes to the gain value.
-	this.gainNode.gain.cancelAndHoldAtTime(time)
+  // Cancels any scheduled and ongoing changes to the gain value.
+  this.gainNode.gain.cancelAndHoldAtTime(time)
 
-	// Changes frequency of the oscillator.
-	this.oscillator.frequency.setValueAtTime(note.frequency, time)
+  // Changes frequency of the oscillator.
+  this.oscillator.frequency.setValueAtTime(note.frequency, time)
 
-	// Sets the gain to 0.1 at the specified time.
-	this.gainNode.gain.setValueAtTime(0.1, time)
+  // Sets the gain to 0.1 at the specified time.
+  this.gainNode.gain.setValueAtTime(0.1, time)
 
-	// Ramps the gain to zero linearly one second after the time.
-	this.gainNode.gain.linearRampToValueAtTime(0, time + 1)
+  // Ramps the gain to zero linearly one second after the time.
+  this.gainNode.gain.linearRampToValueAtTime(0, time + 1)
 }
 ```
 
