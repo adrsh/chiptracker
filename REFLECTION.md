@@ -111,14 +111,14 @@ export function start () {
 ESLint gör det möjligt att hitta och fixa problem automatiskt och editorn hjälper till att fixa indenteringen, så det finns mycket verktyg som hjälper en att ha prydligare kod.
 
 ## Objects and Data Structures
-Efter att ha sett på föreläsningen så blev jag osäker på om jag använder getters och setters på rätt sätt. Just nu gör jag mer eller mindre som om det vore skrivet i Java, det vill säga på följande sätt:
+Efter att ha sett på föreläsningen så blev jag osäker på om jag använder *getters* och *setters* på rätt sätt. I början gjorde jag mer eller mindre som om det vore skrivet i Java, det vill säga på följande sätt:
 ```js
 getNotation () {
   return this.noteNumberToNotation(this.#number)
 }
 ```
 
-I mitt fall är Note-klassen mer som en datastruktur och borde istället ge tillgång till variabler på nedanstående sätt, om jag har förstått rätt.
+Efter några ändringar har jag fått till en bättre struktur på koden och följer Javascript-principer lite bättre.
 ```js
 get notation () {
   return this.name + this.octave
@@ -132,6 +132,8 @@ get name () {
   return this.#noteIndexToNoteName(this.#number % 12)
 }
 ```
+
+Man kan ju göra på lite olika sätt, som föreläsningen om *Objects & Error Handling* tar upp. Antingen att sätta privata fält i konstruktorn eller låta *getters* sköta t.ex. uträkningen. Jag vet själv inte riktigt vad som är bäst. Till en början satte jag alla privata fält (t.ex. *frequency*, *octave* och *name*) i konstruktorn, men nu gör jag på ovanstående sätt och behöver bara hålla koll på ett fält, *number*.
 
 
 ## Error Handling
@@ -187,23 +189,18 @@ play (note, time = context.now()) {
 
 ## Unit Tests
 
-Jag vet att testning är en viktig del i mjukvaruutveckling, och det är verkligen något som jag borde sätta mig in i mer. Visst kan man göra manuella tester för att testa gränssnitt, men just att testa enskilda funktioner är något som helst görs automatiskt.
+Jag vet att testning är en viktig del i mjukvaruutveckling, och det är verkligen något som jag borde sätta mig in i mer. Visst kan man göra manuella tester för att testa vissa saker som gränssnitt, men just att testa enskilda funktioner är något som helst görs automatiskt.
 
-Boken säger att det är testerna som gör att man inte är rädd för att ändra koden, att ju fler tester man har desto mindre är man rädd för att göra något fel. Det stämmer nog och ger en trygghet i och med att man snabbt kan se om det har gått helt snett.
+Boken säger att det är testerna som gör att man inte är rädd för att ändra koden, att ju fler tester man har desto mindre är man rädd för att göra något fel. Det ger nog en viss trygghet i och med att man snabbt kan se om det har gått helt snett.
 
 Utifrån sett ser modulen säkerligen pålitligare ut om den är vältestad.
 
-Det hade kanske inte skadat att ha ett par *asserts* för att debugga koden lite lättare, men det är inte riktigt samma sak som *unit tests*.
-
-```js
-assert(2 > 1, 'Two is not bigger than one!?')
-```
 
 ## Classes
 
 Jag var inte helt nöjd med filstrukturen av webchiptune-modulen. Alla klasser och funktioner låg i en och samma fil, vilket var på grund av att jag inte lyckades lösa så att klasserna har tillgång till samma AudioContext om de ligger i olika filer. Detta har jag nu löst och nu har modulen en bättre filstruktur.
 
-Variabler i Instrument och metoder och variabler i Note gjordes privata för att kapsla in dem och hålla dem privata.
+Variabler i Instrument och metoder och variabler i Note gjordes privata för att kapsla in dem.
 
 ```js
 #oscillator
@@ -262,8 +259,9 @@ Jag är absolut inte säker på om jag har byggt modulen på rätt sätt. Boken 
 └─ vite.config.js
 ```
 
-Rubriken *Separate Construcion a Sytem from Using It* skriver om att uppstartsprocessen är något man bör ta itu med. I Javascript skulle man kunna likna det med att man inte ska importera filer/moduler förrän de behövs, till exempel att man inte lägger alla importer i index.js.
+Rubriken *Separate Construcion a Sytem from Using It* skriver om att uppstartsprocessen är något man bör ta itu med. I Javascript skulle man kunna jämföra det med att man kan importera filer/moduler när de behövs, till exempel att man inte lägger alla importer i index.js.
 
+I ct-sequence.js
 ```js
 import '../ct-sequence-note'
 ```
